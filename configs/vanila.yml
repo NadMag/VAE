@@ -5,7 +5,7 @@ model_params:
 
 
 data_params:
-  data_path: "/home/ML_courses/03683533_2021/dataset"
+  data_path: "../../data/celeba"
   train_batch_size: 64
   val_batch_size:  16
   patch_size: 64
