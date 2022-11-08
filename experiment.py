@@ -88,12 +88,12 @@ class VAEXperiment(pl.LightningModule):
                                     "Reconstructions", 
                                     f"recons_{self.logger.name}_Epoch_{self.current_epoch}.png"),
                       normalize=True,
-                      nrow=4) 
+                      nrow=12) 
 
 
   def sample_images(self, test_input, test_label):
     try:
-      samples = self.model.sample(self.params['sample_size'],
+      samples = self.model.sample(144,
                                   self.curr_device,
                                   labels = test_label)
       vutils.save_image(samples.cpu().data,
@@ -101,7 +101,7 @@ class VAEXperiment(pl.LightningModule):
                                       "Samples",      
                                       f"{self.logger.name}_Epoch_{self.current_epoch}.png"),
                         normalize=True,
-                        nrow=4)
+                        nrow=12)
     except Warning:
         pass
 

@@ -35,9 +35,11 @@ tb_logger =  TensorBoardLogger(save_dir=config['logging_params']['save_dir'],
 # For reproducibility
 seed_everything(config['exp_params']['manual_seed'], True)
 
-data = VAEDataset(**config["data_params"], pin_memory=len(config['trainer_params']['gpus']) != 0)
+data = VAEDataset(**config["data_params"], pin_memory=len(config['trainer_params']['devices']) != 0)
 
 data.setup()
+print(len(data.train_dataset))
+print(len(data.val_dataset))
 # model = vae_models[config['model_params']['name']](**config['model_params'])
 model = VanillaVAE(**config['model_params'])
 experiment = VAEXperiment(model,

@@ -5,11 +5,13 @@ model_params:
 
 
 data_params:
-  data_path: "../../data/celeba"
+  data_path: "../data/celeba"
   train_batch_size: 64
   val_batch_size:  16
   patch_size: 64
-  num_workers: 4
+  num_workers: 2
+  train_size: 2000
+  test_size: 1000
 
 
 exp_params:
@@ -22,7 +24,8 @@ exp_params:
   sample_size: 16
 
 trainer_params:
-  gpus: [1]
+  accelerator: "gpu"
+  devices: [0]
   max_epochs: 70
 
 logging_params:
