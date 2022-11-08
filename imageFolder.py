@@ -14,7 +14,7 @@ def create_datasets(data_dir, split, patch_size, size=0):
   full_dset = dset.ImageFolder(root=data_dir, transform=transform)
   indices = range(VAL_END_IDX, len(full_dset)) if split == 'train' else range(VAL_END_IDX)
   
-  if (size == 0):
+  if (size != 0):
     return torch.utils.data.Subset(full_dset, indices[:size])
 
   return torch.utils.data.Subset(full_dset, indices)

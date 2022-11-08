@@ -40,6 +40,8 @@ class VAEDataset(LightningDataModule):
         self.patch_size = patch_size
         self.num_workers = num_workers
         self.pin_memory = pin_memory
+        self.train_size = train_size
+        self.test_size = test_size
 
 
     def setup(self, stage: Optional[str] = None) -> None:
