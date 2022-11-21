@@ -18,8 +18,7 @@ class VAEXperiment(pl.LightningModule):
     self.params = params
     self.curr_device = None
     self._is_first_val = True
-    self._test_input = None
-    self._test_label = None
+    self._recon_batch = None
     self.hold_graph = False
     try:
         self.hold_graph = self.params['retain_first_backpass']
@@ -51,7 +50,7 @@ class VAEXperiment(pl.LightningModule):
 
     results = self.forward(real_img, labels = labels)
     val_loss = self.model.loss_function(*results,
-                                        M_N = 1.0, #real_img.shape[0]/ self.num_val_imgs,
+                                        M_N = self.params['kld_weight'],
                                         optimizer_idx = optimizer_idx,
                                         batch_idx = batch_idx)
 
@@ -64,31 +63,30 @@ class VAEXperiment(pl.LightningModule):
     
     if self._is_first_val == True:
       self._is_first_val = False
-      self._test_input, self._test_label = next(iter(self.trainer.datamodule.test_dataloader()))[:16]
-      vutils.save_image(self._test_input,
+      self._recon_batch, _ = next(iter(self.trainer.datamodule.test_dataloader()))[:16]
+      vutils.save_image(self._recon_batch,
                       os.path.join(self.logger.log_dir , 
                                     "Reconstructions", 
                                     f"original_{self.logger.name}.png"),
                       normalize=True,
                       nrow=4) 
     
-    return self._test_input, self._test_label 
+    return self._recon_batch 
 
 
   def on_validation_end(self) -> None:
-    test_input, test_label = self._get_recon_batch()
-    test_input = test_input.to(self.curr_device)
-    test_label = test_label.to(self.curr_device)
+    recon_batch = self._get_recon_batch()
+    recon_batch = recon_batch.to(self.curr_device)
 
-    self.test_reconstruction(test_input, test_label)
+    self.test_reconstruction(recon_batch)
     if (self.params['sample_size'] > 0):
       self.sample_images()
 
 
-  def test_reconstruction(self, test_input, test_label) -> None:
+  def test_reconstruction(self, test_input) -> None:
     # Get sample reconstruction image
 
-    recons = self.model.generate(test_input, labels = test_label)
+    recons = self.model.generate(test_input)
     vutils.save_image(recons.data,
                       os.path.join(self.logger.log_dir , 
                                     "Reconstructions", 
