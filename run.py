@@ -30,7 +30,7 @@ with open(args.filename, 'r') as file:
 
 
 tb_logger =  CSVLogger(save_dir=config['logging_params']['save_dir'],
-                               name=config['model_params']['name'],)
+                               name=config['model_params']['name'])
 
 # For reproducibility
 seed_everything(config['exp_params']['manual_seed'], True)
@@ -47,7 +47,6 @@ experiment = VAEXperiment(model,
 
 runner = Trainer(logger=tb_logger,
                  callbacks=[
-                     LearningRateMonitor(),
                      ModelCheckpoint(save_top_k=2, 
                                      dirpath =os.path.join(tb_logger.log_dir , "checkpoints"), 
                                      monitor= "val_loss",

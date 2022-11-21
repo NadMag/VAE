@@ -40,7 +40,7 @@ class VAEXperiment(pl.LightningModule):
                                           optimizer_idx=optimizer_idx,
                                           batch_idx = batch_idx)
 
-    self.log_dict({key: val.item() for key, val in train_loss.items()})
+    self.log_dict({key: val.item() for key, val in train_loss.items()}, on_epoch=True)
 
     return train_loss['loss']
 
@@ -55,34 +55,34 @@ class VAEXperiment(pl.LightningModule):
                                         optimizer_idx = optimizer_idx,
                                         batch_idx = batch_idx)
 
-    self.log_dict({f"val_{key}": val.item() for key, val in val_loss.items()}, sync_dist=True)
+    self.log_dict({f"val_{key}": val.item() for key, val in val_loss.items()}, on_epoch=True)
 
 
-  def _get_validation_batch(self):
+  def _get_recon_batch(self):
     if self.params['random_val_batch'] == True:            
       return next(iter(self.trainer.datamodule.test_dataloader()))
     
     if self._is_first_val == True:
       self._is_first_val = False
-      self._test_input, self._test_label = next(iter(self.trainer.datamodule.test_dataloader()))
+      self._test_input, self._test_label = next(iter(self.trainer.datamodule.test_dataloader()))[:16]
       vutils.save_image(self._test_input,
                       os.path.join(self.logger.log_dir , 
                                     "Reconstructions", 
-                                    f"recons_{self.logger.name}_original.png"),
+                                    f"original_{self.logger.name}.png"),
                       normalize=True,
-                      nrow=8) 
+                      nrow=4) 
     
     return self._test_input, self._test_label 
 
 
   def on_validation_end(self) -> None:
-    test_input, test_label = self._get_validation_batch()
+    test_input, test_label = self._get_recon_batch()
     test_input = test_input.to(self.curr_device)
     test_label = test_label.to(self.curr_device)
 
     self.test_reconstruction(test_input, test_label)
     if (self.params['sample_size'] > 0):
-      self.sample_images(test_input, test_label)
+      self.sample_images()
 
 
   def test_reconstruction(self, test_input, test_label) -> None:
@@ -97,17 +97,15 @@ class VAEXperiment(pl.LightningModule):
                       nrow=12) 
 
 
-  def sample_images(self, test_input, test_label):
+  def sample_images(self):
     try:
-      samples = self.model.sample(144,
-                                  self.curr_device,
-                                  labels = test_label)
+      samples = self.model.sample(16, self.curr_device)
       vutils.save_image(samples.cpu().data,
                         os.path.join(self.logger.log_dir , 
                                       "Samples",      
                                       f"{self.logger.name}_Epoch_{self.current_epoch}.png"),
                         normalize=True,
-                        nrow=12)
+                        nrow=4)
     except Warning:
         pass
 
