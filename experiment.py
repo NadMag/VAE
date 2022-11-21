@@ -63,7 +63,8 @@ class VAEXperiment(pl.LightningModule):
     
     if self._is_first_val == True:
       self._is_first_val = False
-      self._recon_batch, _ = next(iter(self.trainer.datamodule.test_dataloader()))[:16]
+      full_recon_batch, _ = next(iter(self.trainer.datamodule.test_dataloader()))
+      self._recon_batch = full_recon_batch[:16]
       vutils.save_image(self._recon_batch,
                       os.path.join(self.logger.log_dir , 
                                     "Reconstructions", 
