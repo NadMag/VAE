@@ -1,0 +1,30 @@
+model_params:
+  name: 'VanillaVAE'
+  in_channels: 3
+  latent_dim: 256
+
+data_params:
+  data_path: "./data/celeba"
+  train_batch_size: 64
+  val_batch_size:  64
+  patch_size: 256
+  num_workers: 2
+  train_size: 5000
+  test_size: 200
+
+exp_params:
+  LR: 0.005
+  weight_decay: 0.0
+  scheduler_gamma: 0.95
+  kld_weight: 0.00025
+  manual_seed: 42
+  random_val_batch: false
+  sample_size: 16
+
+trainer_params:
+  accelerator: "cpu"
+  max_epochs: 10
+
+logging_params:
+  save_dir: "logs/"
+  name: "VanillaVAE"

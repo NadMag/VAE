@@ -39,7 +39,7 @@ class VAEXperiment(pl.LightningModule):
                                           optimizer_idx=optimizer_idx,
                                           batch_idx = batch_idx)
 
-    self.log_dict({key: val.item() for key, val in train_loss.items()}, on_epoch=True)
+    self.log_dict({key: val.item() for key, val in train_loss.items()}, on_epoch=True, on_step=False)
 
     return train_loss['loss']
 
@@ -54,7 +54,7 @@ class VAEXperiment(pl.LightningModule):
                                         optimizer_idx = optimizer_idx,
                                         batch_idx = batch_idx)
 
-    self.log_dict({f"val_{key}": val.item() for key, val in val_loss.items()}, on_epoch=True)
+    self.log_dict({f"val_{key}": val.item() for key, val in val_loss.items()}, on_epoch=True, on_step=False)
 
 
   def _get_recon_batch(self):
