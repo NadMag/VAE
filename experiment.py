@@ -58,8 +58,8 @@ class VAEXperiment(pl.LightningModule):
 
 
   def _get_recon_batch(self):
-    if self.params['random_val_batch'] == True:            
-      return next(iter(self.trainer.datamodule.test_dataloader()))
+    # if self.params['random_val_batch'] == True:            
+    #   return next(iter(self.trainer.datamodule.test_dataloader()))
     
     if self._is_first_val == True:
       self._is_first_val = False
@@ -83,16 +83,14 @@ class VAEXperiment(pl.LightningModule):
       self.sample_images()
 
 
-  def test_reconstruction(self, test_input) -> None:
-    # Get sample reconstruction image
-
-    recons = self.model.generate(test_input)
+  def test_reconstruction(self, originals) -> None:
+    recons = self.model.generate(originals)
     vutils.save_image(recons.data,
                       os.path.join(self.logger.log_dir , 
                                     "Reconstructions", 
                                     f"recons_{self.logger.name}_Epoch_{self.current_epoch}.png"),
                       normalize=True,
-                      nrow=12) 
+                      nrow=4)
 
 
   def sample_images(self):
