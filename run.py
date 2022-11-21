@@ -7,7 +7,7 @@ from models.vanila_vae import VanillaVAE
 from experiment import VAEXperiment
 import torch.backends.cudnn as cudnn
 from pytorch_lightning import Trainer
-from pytorch_lightning.loggers import TensorBoardLogger
+from pytorch_lightning.loggers import CSVLogger
 from pytorch_lightning.utilities.seed import seed_everything
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.strategies.ddp import DDPStrategy
@@ -29,7 +29,7 @@ with open(args.filename, 'r') as file:
         print(exc)
 
 
-tb_logger =  TensorBoardLogger(save_dir=config['logging_params']['save_dir'],
+tb_logger =  CSVLogger(save_dir=config['logging_params']['save_dir'],
                                name=config['model_params']['name'],)
 
 # For reproducibility

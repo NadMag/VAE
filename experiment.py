@@ -40,7 +40,7 @@ class VAEXperiment(pl.LightningModule):
                                           optimizer_idx=optimizer_idx,
                                           batch_idx = batch_idx)
 
-    self.log_dict({key: val.item() for key, val in train_loss.items()}, sync_dist=True)
+    self.log_dict({key: val.item() for key, val in train_loss.items()})
 
     return train_loss['loss']
 
@@ -65,6 +65,12 @@ class VAEXperiment(pl.LightningModule):
     if self._is_first_val == True:
       self._is_first_val = False
       self._test_input, self._test_label = next(iter(self.trainer.datamodule.test_dataloader()))
+      vutils.save_image(self._test_input,
+                      os.path.join(self.logger.log_dir , 
+                                    "Reconstructions", 
+                                    f"recons_{self.logger.name}_original.png"),
+                      normalize=True,
+                      nrow=8) 
     
     return self._test_input, self._test_label 
 

@@ -57,7 +57,7 @@ class VAEDataset(LightningDataModule):
             batch_size=self.train_batch_size,
             num_workers=self.num_workers,
             shuffle=True,
-            pin_memory=self.pin_memory,
+            pin_memory=self.pin_memory
         )
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
@@ -66,7 +66,7 @@ class VAEDataset(LightningDataModule):
             batch_size=self.val_batch_size,
             num_workers=self.num_workers,
             shuffle=False,
-            pin_memory=self.pin_memory,
+            pin_memory=self.pin_memory
         )
     
     def test_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
