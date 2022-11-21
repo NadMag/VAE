@@ -7,7 +7,7 @@ data_params:
   data_path: "./data/celeba"
   train_batch_size: 64
   val_batch_size:  64
-  patch_size: 256
+  patch_size: 64
   num_workers: 2
   train_size: 5000
   test_size: 200
