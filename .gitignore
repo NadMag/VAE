@@ -1,5 +1,7 @@
 data/
 logs/
+slurm/jobs
+slurm/logs
 events.*
 
 # Byte-compiled / optimized / DLL files
