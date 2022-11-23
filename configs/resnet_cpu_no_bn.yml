@@ -1,0 +1,29 @@
+model_params:
+  name: 'ResnetAE'
+  in_channels: 3
+  latent_dim: 256
+  use_bn: false
+
+data_params:
+  data_path: "/home/ML_courses/03683533_2021/nadav_ohad_dvir/celeba/"
+  train_batch_size: 64
+  val_batch_size:  64
+  patch_size: 256
+  num_workers: 2
+  train_size: 5000
+  test_size: 200
+
+exp_params:
+  LR: 0.005
+  weight_decay: 0.0
+  scheduler_gamma: 0.95
+  manual_seed: 42
+  random_val_batch: false
+
+trainer_params:
+  accelerator: "cpu"
+  max_epochs: 10
+
+logging_params:
+  save_dir: "logs/"
+  name: "ResnetAE"

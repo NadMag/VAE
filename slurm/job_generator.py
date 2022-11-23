@@ -7,6 +7,11 @@ def parse_args():
     description_str = 'Generate Slurm file for running experiments.'
     parser = argparse.ArgumentParser(description=description_str,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--file', '-f',
+                        dest="file_path",
+                        metavar='FILE',
+                        help =  'path to the run file',
+                        default='./run_ae.py')
     parser.add_argument('--run', action='store_true', dest='should_run')
     parser.add_argument('--run_locally', action='store_true')
     parser.add_argument('--gpu', action='store_true')
@@ -24,8 +29,8 @@ def parse_args():
 def generate_job_file(args):
     test_name = args.name
     base_path = os.getcwd()
-    output_path = os.path.join(base_path, "slurm_logs", f"{test_name}.out")
-    err_path = os.path.join(base_path, "slurm_logs", f"{test_name}.err")
+    output_path = os.path.join(base_path, "slurm/logs", f"{test_name}.out")
+    err_path = os.path.join(base_path, "slurm/logs", f"{test_name}.err")
     slurm_lines = ["#!/bin/sh",
                    f"#SBATCH --job-name={test_name}",
                    f"#SBATCH --output={output_path}",
@@ -38,7 +43,7 @@ def generate_job_file(args):
                    #"#SBATCH --mem-per-cpu=8000"
                    ]
     # change this line to run your script
-    slurm_lines.append(f"python run.py -c {args.config_path}")
+    slurm_lines.append(f"python {args.file_path} -c {args.config_path}")
 
     out_dir = os.path.join(base_path, "slurm", 'jobs')
     log_dir = os.path.join(base_path, 'slurm', "logs")

@@ -23,9 +23,11 @@
       "type": "pickString",
       "description": "config path",
       "options": [
-        "./configs/vanila_cpu.yml"
+        "./configs/vanila_cpu.yml",
+        "./configs/resnet_cpu.yml",
+        "./configs/resnet_cpu_no_bn.yml"
       ],
-      "default": "./configs/vanila_cpu.yml"
+      "default": "./configs/resnet_cpu.yml"
     }
   ]
 }
